@@ -4,7 +4,7 @@ declare(strict_types=1);
 define('SF_DATA', rtrim(getenv('SF_DATA') ?: '/data', '/'));
 define('SF_MEDIA', rtrim(getenv('SF_MEDIA') ?: '/media', '/'));
 define('SF_ROOT', dirname(__DIR__));
-define('SF_VERSION', '1.0.0');
+define('SF_VERSION', '1.0.1');
 
 foreach (['', '/sessions', '/cache', '/cache/hls', '/cache/sub', '/backups', '/images', '/tmp'] as $d) {
     if (!is_dir(SF_DATA . $d)) { @mkdir(SF_DATA . $d, 0750, true); }

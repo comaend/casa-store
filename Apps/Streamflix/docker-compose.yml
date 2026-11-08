@@ -1,7 +1,7 @@
 name: streamflix
 services:
   streamflix:
-    image: ghcr.io/comaend/streamflix:1.0.0
+    image: ghcr.io/GITHUB_OWNER/streamflix:1.0.1
     container_name: streamflix
     restart: unless-stopped
     stop_grace_period: 1m
@@ -66,7 +66,7 @@ x-casaos:
   author: STREAMFLIX Project
   developer: STREAMFLIX Project
   category: Media
-  icon: https://cdn.jsdelivr.net/gh/comaend/casa-store@main/Apps/Streamflix/icon.png
+  icon: https://cdn.jsdelivr.net/gh/GITHUB_OWNER_RAW/GITHUB_REPO@main/Apps/Streamflix/icon.png
   index: /
   port_map: ${WEBUI_PORT:-8484}
   scheme: http

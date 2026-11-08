@@ -1,0 +1,94 @@
+name: streamflix
+services:
+  streamflix:
+    image: ghcr.io/GITHUB_OWNER/streamflix:1.0.0
+    container_name: streamflix
+    restart: unless-stopped
+    stop_grace_period: 1m
+    ports:
+      - target: 8080
+        published: ${WEBUI_PORT:-8484}
+        protocol: tcp
+    volumes:
+      # Persistente Daten: Datenbank, Bilder, Backups, Cache
+      - type: bind
+        source: /DATA/AppData/streamflix/data
+        target: /data
+      # Medien (schreibgeschützt): CasaOS-Hauptspeicher /DATA, z. B. /DATA/Media/Movies
+      - type: bind
+        source: /DATA
+        target: /media/data
+        read_only: true
+      # Medien (schreibgeschützt): extern angeschlossene Laufwerke (CasaOS hängt sie unter /media/<Name> ein)
+      - type: bind
+        source: /media
+        target: /media/external
+        read_only: true
+    environment:
+      - TZ=Europe/Berlin
+      - SF_MEDIA=/media
+      - SF_DATA=/data
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8080/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    x-casaos:
+      envs:
+        - container: TZ
+          description:
+            en_us: Time zone
+            de_de: Zeitzone
+      ports:
+        - container: "8080"
+          description:
+            en_us: Web UI
+            de_de: Weboberfläche
+      volumes:
+        - container: /data
+          description:
+            en_us: STREAMFLIX data (database, images, backups)
+            de_de: STREAMFLIX-Daten (Datenbank, Bilder, Backups)
+        - container: /media/data
+          description:
+            en_us: Read-only access to /DATA (add folders like /media/data/Media/Movies in the admin center)
+            de_de: Lesezugriff auf /DATA (im Admin-Center Ordner wie /media/data/Media/Movies hinzufügen)
+        - container: /media/external
+          description:
+            en_us: Read-only access to external drives (host /media)
+            de_de: Lesezugriff auf externe Laufwerke (Host /media)
+x-casaos:
+  architectures:
+    - amd64
+    - arm64
+  main: streamflix
+  author: STREAMFLIX Project
+  developer: STREAMFLIX Project
+  category: Media
+  icon: https://cdn.jsdelivr.net/gh/GITHUB_OWNER_RAW/GITHUB_REPO@main/Apps/Streamflix/icon.png
+  index: /
+  port_map: ${WEBUI_PORT:-8484}
+  scheme: http
+  title:
+    en_us: STREAMFLIX
+    de_de: STREAMFLIX
+  tagline:
+    en_us: Your private streaming platform for movies and series
+    de_de: Deine private Streaming-Plattform für Filme und Serien
+  description:
+    en_us: >-
+      Self-hosted Netflix-style streaming for your own movies and series. Multiple users with profiles,
+      watchlist, continue watching, search, subtitles, audio tracks, direct play or HLS via FFmpeg and a full admin center.
+      Media is only ever read, never modified. Works fully offline.
+    de_de: >-
+      Selbst gehostete Streaming-Plattform im Netflix-Stil für deine eigenen Filme und Serien. Mehrere Benutzer mit Profilen,
+      Meine Liste, Weiterschauen, Suche, Untertitel, Audiospuren, Direct Play oder HLS per FFmpeg und ein vollständiges Admin-Center.
+      Medien werden ausschließlich gelesen, nie verändert. Funktioniert komplett offline.
+  tips:
+    before_install:
+      en_us: |
+        The first account you register becomes the **Superadmin**. Then open the admin center (`/admin/`) → *Medienordner* and add e.g. `/media/data/Media/Movies`.
+      de_de: |
+        Das **erste registrierte Konto wird Superadmin**. Danach im Admin-Center (`/admin/`) → *Medienordner* z. B. `/media/data/Media/Movies` hinzufügen.
+        Das Image wird beim ersten Mal von ghcr.io geladen.

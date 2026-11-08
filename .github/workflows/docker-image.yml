@@ -58,6 +58,4 @@ jobs:
             ghcr.io/${{ steps.o.outputs.owner }}/streamflix:${{ steps.v.outputs.version }}
             ghcr.io/${{ steps.o.outputs.owner }}/streamflix:latest
             org.opencontainers.image.source=https://github.com/${{ github.repository }}
-          tags: |
-            ghcr.io/${{ steps.o.outputs.owner }}/streamflix:${{ steps.v.outputs.version }}
-            ghcr.io/${{ steps.o.outputs.owner }}/streamflix:latest
+
